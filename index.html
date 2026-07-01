@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickWeb India - Billing System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="topbar no-print">
+        <div class="brand">
+            <img src="logo.jpeg" alt="QuickWeb India Logo" class="logo">
+            <div class="brand-text">
+                <h1>QuickWeb India</h1>
+                <span>Billing & Invoice Manager</span>
+            </div>
+        </div>
+        <nav class="nav">
+            <button class="nav-btn active" data-view="dashboard">Dashboard</button>
+            <button class="nav-btn" data-view="billForm">Create Bill</button>
+            <button class="nav-btn" data-view="allBills">All Bills</button>
+        </nav>
+    </header>
+
+    <main class="container">
+
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="view active no-print">
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>Total Bills</h3>
+                    <p id="statTotalBills">0</p>
+                </div>
+                <div class="card">
+                    <h3>Total Revenue</h3>
+                    <p id="statTotalRevenue">₹0</p>
+                </div>
+                <div class="card">
+                    <h3>Total Advance Received</h3>
+                    <p id="statTotalAdvance">₹0</p>
+                </div>
+                <div class="card">
+                    <h3>Total Pending Amount</h3>
+                    <p id="statTotalPending">₹0</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Recent Bills</h2>
+                    <div class="panel-actions">
+                        <input type="text" id="dashboardSearch" placeholder="Search by name, invoice#, phone, company...">
+                        <button class="btn primary" id="newBillBtn">+ Create New Bill</button>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table id="recentBillsTable">
+                        <thead>
+                            <tr>
+                                <th>Invoice #</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Grand Total</th>
+                                <th>Advance</th>
+                                <th>Pending</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentBillsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ALL BILLS -->
+        <section id="allBills" class="view no-print">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>All Bills</h2>
+                    <div class="panel-actions">
+                        <input type="text" id="allBillsSearch" placeholder="Search by name, invoice#, phone, company...">
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table id="allBillsTable">
+                        <thead>
+                            <tr>
+                                <th>Invoice #</th>
+                                <th>Customer</th>
+                                <th>Phone</th>
+                                <th>Company</th>
+                                <th>Date</th>
+                                <th>Grand Total</th>
+                                <th>Advance</th>
+                                <th>Pending</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allBillsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- BILL FORM -->
+        <section id="billForm" class="view no-print">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2 id="formTitle">Create New Bill</h2>
+                </div>
+
+                <form id="invoiceForm">
+                    <input type="hidden" id="billId">
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Customer Name *</label>
+                            <input type="text" id="customerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Customer Phone *</label>
+                            <input type="tel" id="customerPhone" required pattern="[0-9]{10}" maxlength="10">
+                        </div>
+                        <div class="form-group">
+                            <label>Customer Email (Optional)</label>
+                            <input type="email" id="customerEmail">
+                        </div>
+                        <div class="form-group">
+                            <label>Company Name (Optional)</label>
+                            <input type="text" id="companyName">
+                        </div>
+                        <div class="form-group">
+                            <label>GST Number (Optional)</label>
+                            <input type="text" id="customerGst">
+                        </div>
+                        <div class="form-group full">
+                            <label>Customer Address *</label>
+                            <textarea id="customerAddress" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Invoice Number</label>
+                            <input type="text" id="invoiceNumber" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Invoice Date *</label>
+                            <input type="date" id="invoiceDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Due Date *</label>
+                            <input type="date" id="dueDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Payment Status *</label>
+                            <select id="paymentStatus" required>
+              <option value="Unpaid">Unpaid</option>
+              <option value="Partial">Partial</option>
+              <option value="Paid">Paid</option>
+            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Payment Mode *</label>
+                            <select id="paymentMode" required>
+              <option value="Cash">Cash</option>
+              <option value="UPI">UPI</option>
+              <option value="Bank Transfer">Bank Transfer</option>
+              <option value="Card">Card</option>
+            </select>
+                        </div>
+                    </div>
+
+                    <h3 class="section-title">Service Details</h3>
+                    <div class="table-wrapper">
+                        <table id="servicesTable">
+                            <thead>
+                                <tr>
+                                    <th>Service Name</th>
+                                    <th>Description</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Amount</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="servicesBody"></tbody>
+                        </table>
+                    </div>
+                    <button type="button" class="btn secondary" id="addServiceBtn">+ Add Service</button>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Discount (₹)</label>
+                            <input type="number" id="discount" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>GST %</label>
+                            <input type="number" id="gstPercent" value="18" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Advance Paid (₹)</label>
+                            <input type="number" id="advancePaid" value="0" min="0">
+                        </div>
+                    </div>
+
+                    <div class="summary-box">
+                        <div class="summary-row"><span>Subtotal</span><span id="sumSubtotal">₹0</span></div>
+                        <div class="summary-row"><span>Discount</span><span id="sumDiscount">₹0</span></div>
+                        <div class="summary-row"><span>GST</span><span id="sumGst">₹0</span></div>
+                        <div class="summary-row total"><span>Grand Total</span><span id="sumGrandTotal">₹0</span></div>
+                        <div class="summary-row"><span>Advance Paid</span><span id="sumAdvance">₹0</span></div>
+                        <div class="summary-row pending"><span>Remaining Balance</span><span id="sumPending">₹0</span></div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group full">
+                            <label>Notes</label>
+                            <textarea id="notes"></textarea>
+                        </div>
+                        <div class="form-group full">
+                            <label>Terms & Conditions</label>
+                            <textarea id="terms">Payment due within 7 days. Goods once sold will not be returned.</textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn primary" id="saveBillBtn">Save Invoice</button>
+                        <button type="button" class="btn" id="resetFormBtn">Reset</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- INVOICE PREVIEW -->
+        <section id="invoiceView" class="view no-print">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Invoice Preview</h2>
+                    <div class="panel-actions">
+                        <button class="btn secondary" id="editBillBtn">Edit</button>
+                        <button class="btn secondary" id="duplicateBillBtn">Duplicate</button>
+                        <button class="btn danger" id="deleteBillBtn">Delete</button>
+                        <button class="btn primary" id="printBillBtn">Print</button>
+                        <button class="btn primary" id="downloadPdfBtn">Download PDF</button>
+                    </div>
+                </div>
+
+                <div id="invoicePrintArea" class="invoice-sheet">
+                    <div class="invoice-header">
+                        <div class="invoice-header-left">
+                            <img src="logo.jpeg" alt="QuickWeb India Logo" class="invoice-logo">
+                            <div>
+                                <h2>QuickWeb India</h2>
+                                <p>GST Number: 10EAQPA4637F1Z1</p>
+                                <p>Owner: Md Affan</p>
+                                <p>Phone: 9229604428</p>
+                            </div>
+                        </div>
+                        <div class="invoice-header-right">
+                            <h3>INVOICE</h3>
+                            <p id="inv_number"></p>
+                            <p id="inv_date"></p>
+                            <p id="inv_due"></p>
+                        </div>
+                    </div>
+
+                    <div class="invoice-parties">
+                        <div>
+                            <h4>Billed To</h4>
+                            <p id="inv_customerName"></p>
+                            <p id="inv_customerAddress"></p>
+                            <p id="inv_customerPhone"></p>
+                            <p id="inv_customerEmail"></p>
+                            <p id="inv_companyName"></p>
+                            <p id="inv_customerGst"></p>
+                        </div>
+                        <div>
+                            <h4>Payment Info</h4>
+                            <p>Status: <span id="inv_status"></span></p>
+                            <p>Mode: <span id="inv_mode"></span></p>
+                        </div>
+                    </div>
+
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Description</th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inv_servicesBody"></tbody>
+                    </table>
+
+                    <div class="invoice-totals">
+                        <div class="row"><span>Subtotal</span><span id="inv_subtotal"></span></div>
+                        <div class="row"><span>Discount</span><span id="inv_discount"></span></div>
+                        <div class="row"><span>GST</span><span id="inv_gst"></span></div>
+                        <div class="row total"><span>Grand Total</span><span id="inv_grandTotal"></span></div>
+                        <div class="row"><span>Advance Paid</span><span id="inv_advance"></span></div>
+                        <div class="row pending"><span>Remaining Balance</span><span id="inv_pending"></span></div>
+                    </div>
+
+                    <div class="invoice-notes">
+                        <p><strong>Notes:</strong> <span id="inv_notes"></span></p>
+                        <p><strong>Terms & Conditions:</strong> <span id="inv_terms"></span></p>
+                    </div>
+
+                    <div class="invoice-footer">
+                        <p>Thank you for choosing QuickWeb India.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
